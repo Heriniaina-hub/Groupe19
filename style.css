@@ -348,3 +348,16 @@ body {
     0%, 100% { transform: translateY(0); text-shadow: 0 0 10px rgba(56, 189, 248, 0.5); }
     50% { transform: translateY(-10px); text-shadow: 0 0 20px var(--accent-color); }
 }
+
+  /* ── FOOTER ── */
+        footer {
+            background: var(--blue-deep);
+            color: rgba(255, 255, 255, .35);
+            text-align: center;
+            padding: 2rem;
+            font-size: .82rem;
+        }
+
+        footer span {
+            color: var(--blue-light);
+        }
