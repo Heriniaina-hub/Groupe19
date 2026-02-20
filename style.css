@@ -1,3 +1,6 @@
+html, body {
+  min-width: 1200px;
+}
 :root {
     --primary-gradient: linear-gradient(45deg, #ff00cc, #3333ff, #00d4ff);
     --glass-bg: rgba(255, 255, 255, 0.1);
@@ -361,3 +364,4 @@ body {
         footer span {
             color: var(--blue-light);
         }
+
