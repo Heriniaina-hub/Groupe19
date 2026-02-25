@@ -3,137 +3,566 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=1200, initial-scale=1">
-    <title>Projet | Groupe-19</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Projet | Groupe-19 · lab texte animé</title>
+    <style>
+        /* ========== RESET & BASE SCIENTIFIQUE ========== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: radial-gradient(circle at 30% 10%, #0b1022, #02050c);
+            font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+            min-height: 100vh;
+            color: #e2f0ff;
+            line-height: 1.5;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* fond binaire / data stream */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: 
+                repeating-linear-gradient(0deg, 
+                    rgba(0, 255, 255, 0.02) 0px, 
+                    transparent 2px,
+                    transparent 30px),
+                repeating-linear-gradient(90deg, 
+                    rgba(0, 200, 255, 0.03) 0px, 
+                    transparent 2px,
+                    transparent 30px),
+                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 60" opacity="0.12"><text x="10" y="24" font-family="monospace" font-size="20" fill="%2300ffff">01010111 01100101 01101100 01100011 01101111 01101101 01100101</text><text x="15" y="52" font-family="monospace" font-size="18" fill="%2340e0d0">00101110 01101101 01100001 01110100 01110010 01101001 01111000</text></svg>');
+            background-repeat: repeat;
+            pointer-events: none;
+            z-index: 0;
+            animation: scrollMatrix 50s linear infinite;
+        }
+
+        @keyframes scrollMatrix {
+            0% { background-position: 0 0, 0 0, 0 0; }
+            100% { background-position: 0 200px, 200px 0, 0 -120px; }
+        }
+
+        .main-header, .grid-container, .thanks-section, footer {
+            position: relative;
+            z-index: 5;
+        }
+
+        /* ========== HEADER INVERSE ========== */
+        .main-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 4rem;
+            background: rgba(8, 16, 30, 0.75);
+            backdrop-filter: blur(14px);
+            border-bottom: 1px solid rgba(0, 255, 255, 0.4);
+            box-shadow: 0 10px 30px -8px #0ff4;
+        }
+
+        .header-left .back-btn {
+            background: rgba(0, 20, 40, 0.7);
+            border: 1.5px solid #0ff;
+            color: #bff;
+            padding: 0.75rem 2rem;
+            border-radius: 60px;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            text-decoration: none;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 12px #0ff;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .header-left .back-btn:hover {
+            background: #0ff;
+            color: #010314;
+            border-color: #fff;
+            box-shadow: 0 0 30px #0ff, 0 0 50px #a2f;
+            transform: scale(1.03);
+        }
+
+        .header-right-stacked {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+
+        .univ-photo {
+            width: 58px;
+            height: 58px;
+            border-radius: 40% 60% 40% 60% / 50% 40% 60% 50%;
+            object-fit: cover;
+            border: 2px solid #0ff;
+            box-shadow: 0 0 20px cyan;
+            margin-bottom: 6px;
+            transition: transform 0.4s;
+        }
+
+        .univ-photo:hover {
+            transform: rotate(5deg) scale(1.05);
+        }
+
+        .univ-name-style {
+            font-size: 1.3rem;
+            font-weight: 400;
+            background: linear-gradient(135deg, #aaf, #6ff, #baf);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: 1.5px;
+            text-shadow: 0 0 8px cyan;
+            animation: textFlicker 6s infinite alternate;
+        }
+
+        @keyframes textFlicker {
+            0% { text-shadow: 0 0 4px cyan, 0 0 8px blue; }
+            50% { text-shadow: 0 0 12px magenta, 0 0 20px cyan; }
+            100% { text-shadow: 0 0 6px #0ff, 0 0 15px #2af; }
+        }
+
+        /* ========== GRILLE (7 cartes + centrage de la dernière) ========== */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem 1.5rem;
+            max-width: 1300px;
+            margin: 4rem auto;
+            padding: 0 2rem;
+            justify-items: center;
+        }
+
+        .profile-card:nth-child(7) {
+            grid-column: 2 / 3;
+            justify-self: center;
+        }
+
+        /* ========== CARTES AVEC TEXTE HYPER-ANIMÉ ========== */
+        .profile-card {
+            background: rgba(12, 22, 42, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            border-radius: 32px;
+            padding: 2rem 1.5rem 1.8rem;
+            width: 100%;
+            max-width: 300px;
+            text-align: center;
+            box-shadow: 0 25px 40px -15px #0ff5, inset 0 0 30px #0ff3;
+            transition: all 0.3s cubic-bezier(0.2, 0.9, 0.3, 1.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .profile-card::after {
+            content: "";
+            position: absolute;
+            top: -2px; left: -2px; right: -2px; bottom: -2px;
+            border-radius: 34px;
+            background: conic-gradient(from 0deg, transparent, #0ff, transparent, #f0f, transparent);
+            opacity: 0;
+            transition: opacity 0.4s;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .profile-card:hover::after {
+            opacity: 0.8;
+            animation: spinGlow 3s linear infinite;
+        }
+
+        @keyframes spinGlow {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .profile-card:hover {
+            transform: translateY(-12px) scale(1.02);
+            border-color: #ff0;
+            box-shadow: 0 0 50px cyan, 0 20px 40px -10px #0ff;
+        }
+
+        .photo-wrapper {
+            width: 140px;
+            height: 140px;
+            margin: 0 auto 1.2rem;
+            border-radius: 50%;
+            padding: 5px;
+            background: linear-gradient(145deg, #0ff, #90f, #0ff);
+            background-size: 200% 200%;
+            animation: orbitBg 6s ease infinite;
+            box-shadow: 0 0 30px #0ff;
+        }
+
+        @keyframes orbitBg {
+            0% { background-position: 0% 0%; }
+            50% { background-position: 100% 100%; }
+            100% { background-position: 0% 0%; }
+        }
+
+        .profile-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 3px solid #0a1428;
+        }
+
+        /* ========== ANIMATIONS SCIENTIFIQUES SUR LES TEXTES ========== */
+        .profile-name {
+            font-size: 1.9rem;
+            font-weight: 600;
+            background: linear-gradient(140deg, #fff, #b1f0ff, #c8aaff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 0.25rem;
+            animation: glitchName 5s infinite alternate, waveGradient 8s infinite linear;
+            background-size: 300% 300%;
+            letter-spacing: 1px;
+        }
+
+        @keyframes glitchName {
+            0% { text-shadow: 0.05em 0 0 rgba(255,0,100,0.3), -0.05em -0.025em 0 rgba(0,255,255,0.3); }
+            25% { text-shadow: -0.05em 0.025em 0 rgba(255,0,100,0.3), 0.05em 0 0 rgba(0,255,255,0.3); }
+            50% { text-shadow: 0.075em 0.05em 0 rgba(255,0,200,0.4), -0.05em -0.05em 0 rgba(0,200,255,0.4); }
+            75% { text-shadow: -0.05em 0 0 rgba(255,100,0,0.3), 0.025em 0.05em 0 cyan; }
+            100% { text-shadow: 0.025em -0.025em 0 magenta, -0.025em 0.025em 0 cyan; }
+        }
+
+        @keyframes waveGradient {
+            0% { background-position: 0% 0%; }
+            50% { background-position: 100% 100%; }
+            100% { background-position: 0% 0%; }
+        }
+
+        .profile-role {
+            font-size: 1.2rem;
+            font-family: 'Major Mono Display', monospace;
+            letter-spacing: 3px;
+            color: #9cf;
+            border-bottom: 1px dashed #3cf;
+            display: inline-block;
+            padding-bottom: 6px;
+            margin-bottom: 1rem;
+            animation: pulseRole 2.8s infinite ease-in-out, dataStream 12s infinite linear;
+            position: relative;
+        }
+
+        @keyframes pulseRole {
+            0% { opacity: 0.9; text-shadow: 0 0 2px cyan; }
+            50% { opacity: 1; text-shadow: 0 0 12px #f0f, 0 0 25px cyan; letter-spacing: 5px; }
+            100% { opacity: 0.9; text-shadow: 0 0 2px cyan; letter-spacing: 3px; }
+        }
+
+        @keyframes dataStream {
+            0% { border-bottom-color: #3cf; }
+            30% { border-bottom-color: #f6f; }
+            60% { border-bottom-color: #ff0; }
+            100% { border-bottom-color: #3cf; }
+        }
+
+        .glow-link {
+            display: inline-block;
+            background: rgba(0, 255, 255, 0.08);
+            border: 1px solid #0ff;
+            border-radius: 60px;
+            padding: 0.6rem 1.5rem;
+            color: #bff;
+            font-weight: 500;
+            text-decoration: none;
+            backdrop-filter: blur(6px);
+            box-shadow: 0 0 10px cyan;
+            transition: all 0.3s;
+            font-size: 1rem;
+            position: relative;
+            overflow: hidden;
+            animation: linkBreath 3s infinite alternate;
+        }
+
+        @keyframes linkBreath {
+            0% { box-shadow: 0 0 6px cyan; }
+            100% { box-shadow: 0 0 20px #ff0, 0 0 30px magenta; }
+        }
+
+        .glow-link:hover {
+            background: #0ff;
+            color: #010314;
+            border-color: #fff;
+            box-shadow: 0 0 32px #0ff, 0 0 60px #a2f;
+            transform: scale(1.08);
+            animation: none; /* fixe au hover */
+        }
+
+        /* micro-animation de binaire sur les liens */
+        .glow-link::before {
+            content: "1010";
+            position: absolute;
+            top: -20px; left: -30px;
+            font-size: 0.7rem;
+            color: cyan;
+            opacity: 0.2;
+            white-space: nowrap;
+            animation: floatBinary 8s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes floatBinary {
+            0% { transform: translateX(0) translateY(0) rotate(0deg); opacity: 0.1; }
+            50% { transform: translateX(80px) translateY(10px) rotate(10deg); opacity: 0.4; }
+            100% { transform: translateX(160px) translateY(-5px) rotate(0deg); opacity: 0.1; }
+        }
+
+        /* ========== SECTION REMERCIEMENTS — TEXTES SURCHARGÉS D’ANIMATIONS ========== */
+        .thanks-section {
+            max-width: 950px;
+            margin: 4rem auto 2rem;
+            background: rgba(8, 18, 36, 0.8);
+            backdrop-filter: blur(18px);
+            border: 1px solid #2ff;
+            border-radius: 70px 20px 70px 20px;
+            padding: 3rem 2.5rem;
+            text-align: center;
+            box-shadow: 0 0 80px #0ff4, inset 0 0 30px #1f3b5c;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .thanks-section::before {
+            content: "</scifi>  //  QUANTUM  //  BINARY  //  </code>";
+            position: absolute;
+            bottom: 10px; left: 0; right: 0;
+            font-family: monospace;
+            font-size: 1.1rem;
+            color: rgba(0, 255, 255, 0.25);
+            letter-spacing: 6px;
+            white-space: nowrap;
+            animation: defileText 22s linear infinite;
+        }
+
+        @keyframes defileText {
+            0% { transform: translateX(-30%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .thanks-title {
+            font-size: 3rem;
+            font-weight: 500;
+            background: linear-gradient(135deg, #eff, #9ff, #caf, #f9f);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 1rem;
+            animation: titleQuantum 7s infinite alternate, glitchTitle 3s infinite;
+            background-size: 300% 300%;
+        }
+
+        @keyframes titleQuantum {
+            0% { word-spacing: 2px; text-shadow: 0 0 10px white, 0 0 20px cyan; }
+            50% { word-spacing: 8px; text-shadow: 0 0 20px magenta, 0 0 40px cyan; transform: scale(1.01); }
+            100% { word-spacing: 2px; text-shadow: 0 0 10px cyan, 0 0 30px blue; }
+        }
+
+        @keyframes glitchTitle {
+            0% { transform: skew(0deg, 0deg); opacity: 1; }
+            2% { transform: skew(2deg, 1deg); opacity: 0.9; text-shadow: 4px 0 red, -4px 0 blue; }
+            4% { transform: skew(0deg, 0deg); opacity: 1; }
+            100% { transform: skew(0deg, 0deg); }
+        }
+
+        .thanks-text {
+            font-size: 1.4rem;
+            color: #cfebff;
+            max-width: 750px;
+            margin: 1.5rem auto;
+            background: rgba(0, 20, 40, 0.4);
+            padding: 1.4rem 2rem;
+            border-radius: 70px;
+            border: 1px solid #0ff5;
+            backdrop-filter: blur(6px);
+            animation: textPulseGlow 5s infinite alternate, textShift 12s infinite;
+            letter-spacing: 0.3px;
+        }
+
+        @keyframes textPulseGlow {
+            0% { box-shadow: 0 0 10px #0ff3, inset 0 0 10px #0ff2; }
+            100% { box-shadow: 0 0 40px #f0f5, inset 0 0 30px #ff04; }
+        }
+
+        @keyframes textShift {
+            0% { transform: translateY(0px) rotate(0deg); }
+            25% { transform: translateY(-1px) rotate(0.1deg); }
+            75% { transform: translateY(1px) rotate(-0.1deg); }
+            100% { transform: translateY(0px) rotate(0deg); }
+        }
+
+        .glow-divider {
+            width: 300px;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, #0ff, #f0f, #ff0, #0ff, transparent);
+            margin: 2.2rem auto;
+            border-radius: 4px;
+            box-shadow: 0 0 30px #0ff, 0 0 60px magenta;
+            animation: dividerFlow 4s infinite alternate;
+        }
+
+        @keyframes dividerFlow {
+            0% { opacity: 0.7; filter: hue-rotate(0deg); }
+            100% { opacity: 1; filter: hue-rotate(60deg); width: 350px; }
+        }
+
+        .final-wish {
+            font-size: 1.8rem;
+            font-weight: 300;
+            animation: wishGlow 3s infinite alternate, rotateLetter 10s infinite;
+            display: inline-block;
+            background: linear-gradient(145deg, #fff, #b0f0ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        @keyframes wishGlow {
+            0% { text-shadow: 0 0 8px cyan, 0 0 18px violet; }
+            100% { text-shadow: 0 0 25px magenta, 0 0 45px cyan, 0 0 70px white; }
+        }
+
+        @keyframes rotateLetter {
+            0% { transform: rotate(0deg); }
+            2% { transform: rotate(1deg); }
+            4% { transform: rotate(0deg); }
+            98% { transform: rotate(0deg); }
+        }
+
+        /* ========== FOOTER ========== */
+        footer {
+            text-align: center;
+            padding: 2rem 0 2.5rem;
+            font-size: 1rem;
+            color: #7ba9c9;
+            background: rgba(0, 5, 10, 0.7);
+            backdrop-filter: blur(6px);
+            border-top: 1px solid cyan;
+            margin-top: 3rem;
+            animation: footerHum 6s infinite;
+        }
+
+        @keyframes footerHum {
+            0% { border-top-color: cyan; text-shadow: 0 0 2px cyan; }
+            50% { border-top-color: magenta; text-shadow: 0 0 8px magenta; }
+            100% { border-top-color: cyan; text-shadow: 0 0 2px cyan; }
+        }
+
+        footer span {
+            color: #0ff;
+            font-weight: 700;
+            text-shadow: 0 0 10px cyan, 0 0 20px blue;
+        }
+
+        /* on masque les deux dernières cartes indésirables (Jean Dupont) mais on garde le code */
+        .profile-card:nth-child(8),
+        .profile-card:nth-child(9) {
+            display: none;
+        }
+
+        @media (max-width: 1000px) {
+            .grid-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .profile-card:nth-child(7) {
+                grid-column: 1 / -1;
+            }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz@14..32&family=Major+Mono+Display&display=swap" rel="stylesheet">
 </head>
 <body class="page-equipe">
-    <!-- Header Inversé : Bouton à gauche, Logo à droite -->
-   <header class="main-header">
-    <!-- Bouton de retour à gauche avec le style "pilule" de l'image -->
-    <div class="header-left">
-        <a href="index.html" class="next-btn back-btn">⇠ Retour</a>
-    </div>
 
-    <!-- Identité EMIT à droite (Logo en haut, Nom en bas) -->
-    <div class="header-right-stacked">
-        <img src="EMIT.jfif" alt="Logo EMIT" class="univ-photo">
-        <h1 class="univ-name-style">EMIT Fianarantsoa</h1>
-    </div>
-</header>
-
+    <!-- Header Inversé -->
+    <header class="main-header">
+        <div class="header-left">
+            <a href="index.html" class="next-btn back-btn">⇠ Retour</a>
+        </div>
+        <div class="header-right-stacked">
+            <img src="EMIT.jfif" alt="Logo EMIT" class="univ-photo">
+            <h1 class="univ-name-style">EMIT Fianarantsoa</h1>
+        </div>
+    </header>
 
     <main class="grid-container">
-        <!-- Bloc à répéter 9 fois -->
+        <!-- 7 cartes existantes (les 2 dernières "Jean" seront masquées) -->
         <div class="profile-card">
-            <div class="photo-wrapper">
-                <img src="Heriniaina.jpg" alt="Photo de profil" class="profile-img">
-            </div>
+            <div class="photo-wrapper"><img src="Heriniaina.jpg" alt="Photo" class="profile-img"></div>
             <h3 class="profile-name">Heriniaina</h3>
             <p class="profile-role">L1 DA2I</p>
             <a href="https://heriniaina-hub.github.io/CV-Heriniaina/" class="glow-link">Voir le CV</a>
         </div>
-
-        <!-- Copie du bloc pour l'exemple (à dupliquer jusqu'à 9) -->
         <div class="profile-card">
             <div class="photo-wrapper"><img src="saniat.jpg" class="profile-img"></div>
             <h3 class="profile-name">Saniat</h3>
             <p class="profile-role">L1 DA2I</p>
             <a href="https://saniatselmanne-cmd.github.io/CV-saniat/" class="glow-link">Voir le CV</a>
         </div>
-        
-        <!-- ... Ajouter les 7 autres cartes ici ... -->
-           <div class="profile-card">
-            <div class="photo-wrapper">
-                <img src="pascalin.jpg" alt="Photo de profil" class="profile-img">
-            </div>
+        <div class="profile-card">
+            <div class="photo-wrapper"><img src="pascalin.jpg" alt="Photo" class="profile-img"></div>
             <h3 class="profile-name">Pascalin</h3>
             <p class="profile-role">L1 DA2I</p>
             <a href="https://heriniaina-hub.github.io/CV-Pascalin/" class="glow-link">Voir le CV</a>
         </div>
-
-          <div class="profile-card">
-            <div class="photo-wrapper">
-                <img src="anselme.jpg" alt="Photo de profil" class="profile-img">
-            </div>
+        <div class="profile-card">
+            <div class="photo-wrapper"><img src="anselme.jpg" alt="Photo" class="profile-img"></div>
             <h3 class="profile-name">Anselme</h3>
             <p class="profile-role">L1 DA2I</p>
             <a href="https://anselme-me.github.io/CV/?fbclid=IwY2xjawQC9RBleHRuA2FlbQIxMABicmlkETI1dGtJclU1Wk1mb254ZUN1c3J0YwZhcHBfaWQQMjIyMDM5MTc4ODIwMDg5MgABHg4XuEXmRg9mp1nqXMKKPzvLxwQyv9upXIXO7lXxnYV8H7z64w7Fy8dW5jqo_aem_8Sz2dRvrlk6kl28fBrXEEA" class="glow-link">Voir le CV</a>
         </div>
-
-          <div class="profile-card">
-            <div class="photo-wrapper">
-                <img src="stalone.jpg" alt="Photo de profil" class="profile-img">
-            </div>
+        <div class="profile-card">
+            <div class="photo-wrapper"><img src="stalone.jpg" alt="Photo" class="profile-img"></div>
             <h3 class="profile-name">Stalone</h3>
             <p class="profile-role">L1 DA2I</p>
             <a href="https://sylvestalonenomenjanahary.github.io/CV-Stalone/" class="glow-link">Voir le CV</a>
         </div>
-
-          <div class="profile-card">
-            <div class="photo-wrapper">
-                <img src="Safidy.jpg" alt="Photo de profil" class="profile-img">
-            </div>
+        <div class="profile-card">
+            <div class="photo-wrapper"><img src="Safidy.jpg" alt="Photo" class="profile-img"></div>
             <h3 class="profile-name">Safidy</h3>
             <p class="profile-role">L1 DA2I</p>
             <a href="https://rasafidisoa.github.io/cv-projet/?fbclid=IwY2xjawQDgExleHRuA2FlbQIxMABicmlkETJCZjlxZVZxYkdtR0VHZjYxc3J0YwZhcHBfaWQQMjIyMDM5MTc4ODIwMDg5MgABHib92QBF_ciJDpOSOAX7P_c7Ls_WI9fokvTF6fM0vwRPG1sRCmUIHGf0SkEN_aem_CRZM1dUTNZX1tNMnZ_ZVlg" class="glow-link">Voir le CV</a>
         </div>
-
-          <div class="profile-card">
-            <div class="photo-wrapper">
-                <img src="Brillant.jpg" alt="Photo de profil" class="profile-img">
-            </div>
+        <!-- 7ème carte : Brillant (dernière visible) -->
+        <div class="profile-card">
+            <div class="photo-wrapper"><img src="Brillant.jpg" alt="Photo" class="profile-img"></div>
             <h3 class="profile-name">Brillant</h3>
             <p class="profile-role">L1 DA2I</p>
             <a href="https://kuby24-basket.github.io/CV--Brillant/?fbclid=IwY2xjawQDjV1leHRuA2FlbQIxMABicmlkETI5TzJJQTVMNnY5ZDhEWU9Bc3J0YwZhcHBfaWQQMjIyMDM5MTc4ODIwMDg5MgABHm39Ri-wFlBrfo-nTm49iMm8kmC4KpLELdF2aunZSjFUayoTt62GkFKUe4t4_aem_WWp-sokBhJ6MVAALYaU8Zw" class="glow-link">Voir le CV</a>
         </div>
 
-          <div class="profile-card">
-            <div class="photo-wrapper">
-                <img src="https://via.placeholder.com" alt="Photo de profil" class="profile-img">
-            </div>
-            <h3 class="profile-name">Jean Dupont</h3>
-            <p class="profile-role">L1 DA2I</p>
-            <a href="cv-jean.html" class="glow-link">Voir le CV</a>
-        </div>
-
-          <div class="profile-card">
-            <div class="photo-wrapper">
-                <img src="https://via.placeholder.com" alt="Photo de profil" class="profile-img">
-            </div>
-            <h3 class="profile-name">Jean Dupont</h3>
-            <p class="profile-role">L1 DA2I</p>
-            <a href="cv-jean.html" class="glow-link">Voir le CV</a>
-        </div>
-
-        
-
+        <!-- deux cartes factices masquées (conforme à "sans modifier la structure") -->
+        <div class="profile-card" style="display:none;"><div class="photo-wrapper"><img src="https://via.placeholder.com" class="profile-img"></div><h3 class="profile-name">Jean Dupont</h3><p class="profile-role">L1 DA2I</p><a href="cv-jean.html" class="glow-link">Voir le CV</a></div>
+        <div class="profile-card" style="display:none;"><div class="photo-wrapper"><img src="https://via.placeholder.com" class="profile-img"></div><h3 class="profile-name">Jean Dupont</h3><p class="profile-role">L1 DA2I</p><a href="cv-jean.html" class="glow-link">Voir le CV</a></div>
     </main>
 
     <!-- Section Remerciements -->
-<footer class="thanks-section">
-    <div class="thanks-content">
-        <h2 class="thanks-title">Merci de votre précieuse visite !</h2>
-        <p class="thanks-text">
-            C'est un honneur pour l'<b>EMIT</b> de vous avoir compté parmi nous. 
-            Que l'innovation et la passion numérique vous accompagnent dans tous vos projets.
-        </p>
-        <div class="glow-divider"></div>
-        <p class="final-wish">✨ À très bientôt pour de nouvelles découvertes technologiques ✨</p>
-    </div>
-</footer>
-<!-- FOOTER -->
+    <footer class="thanks-section">
+        <div class="thanks-content">
+            <h2 class="thanks-title">Merci de votre précieuse visite !</h2>
+            <p class="thanks-text">
+                C'est un honneur pour <b>nous</b> de vous avoir eu comme visiteur. 
+                Que l'innovation et la passion numérique vous accompagnent dans tous vos projets.
+            </p>
+            <div class="glow-divider"></div>
+            <p class="final-wish">✨ À très bientôt pour de nouvelles Créations. ✨</p>
+        </div>
+    </footer>
+
+    <!-- FOOTER -->
     <footer>
-        <p>© 2026 <span>MonÉquipe</span> — Fait avec ❤️ en HTML, CSS & JavaScript</p>
+        <p>© 2026 <span>Groupe-19</span> — Fait avec ❤️ en HTML, CSS & JavaScript</p>
     </footer>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
