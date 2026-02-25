@@ -2,30 +2,448 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=1200, initial-scale=1">
-    <title>Interface Université Informatique</title>
-    <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EMIT Fianarantsoa · Département Informatique</title>
+    <!-- Même famille scientifique que la page équipe -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz@14..32&family=Major+Mono+Display&display=swap" rel="stylesheet">
+    <style>
+        /* ===== RESET & BASE SCIENTIFIQUE ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: radial-gradient(circle at 30% 10%, #0b1022, #02050c);
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            min-height: 100vh;
+            color: #e2f0ff;
+            line-height: 1.5;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* fond binaire / data stream */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: 
+                repeating-linear-gradient(0deg, 
+                    rgba(0, 255, 255, 0.02) 0px, 
+                    transparent 2px,
+                    transparent 30px),
+                repeating-linear-gradient(90deg, 
+                    rgba(0, 200, 255, 0.03) 0px, 
+                    transparent 2px,
+                    transparent 30px),
+                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 60" opacity="0.12"><text x="10" y="24" font-family="monospace" font-size="20" fill="%2300ffff">00101111 00100000 01110011 01100011 01101001 00101111</text><text x="15" y="52" font-family="monospace" font-size="18" fill="%2340e0d0">01101100 01100001 01100010 00100000 01101101 01101111 01100100 01100101</text></svg>');
+            background-repeat: repeat;
+            pointer-events: none;
+            z-index: 0;
+            animation: scrollMatrix 50s linear infinite;
+        }
+
+        @keyframes scrollMatrix {
+            0% { background-position: 0 0, 0 0, 0 0; }
+            100% { background-position: 0 200px, 200px 0, 0 -120px; }
+        }
+
+        .main-header, .hero-section, .preface-section, .wish-animation, footer {
+            position: relative;
+            z-index: 5;
+        }
+
+        /* ===== HEADER ===== */
+        .main-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 4rem;
+            background: rgba(8, 16, 30, 0.75);
+            backdrop-filter: blur(14px);
+            border-bottom: 1px solid rgba(0, 255, 255, 0.4);
+            box-shadow: 0 10px 30px -8px #0ff4;
+        }
+
+        .sidebar-left {
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+        }
+
+        .univ-photo {
+            width: 58px;
+            height: 58px;
+            border-radius: 40% 60% 40% 60% / 50% 40% 60% 50%;
+            object-fit: cover;
+            border: 2px solid #0ff;
+            box-shadow: 0 0 20px cyan;
+            transition: transform 0.4s;
+        }
+
+        .univ-photo:hover {
+            transform: rotate(5deg) scale(1.05);
+        }
+
+        .univ-name {
+            font-size: 1.6rem;
+            font-weight: 400;
+            background: linear-gradient(135deg, #aaf, #6ff, #baf);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: 1.5px;
+            text-shadow: 0 0 8px cyan;
+            animation: textFlicker 6s infinite alternate;
+        }
+
+        @keyframes textFlicker {
+            0% { text-shadow: 0 0 4px cyan, 0 0 8px blue; }
+            50% { text-shadow: 0 0 12px magenta, 0 0 20px cyan; }
+            100% { text-shadow: 0 0 6px #0ff, 0 0 15px #2af; }
+        }
+
+        .header-right .next-btn {
+            background: rgba(0, 20, 40, 0.7);
+            border: 1.5px solid #0ff;
+            color: #bff;
+            padding: 0.75rem 2rem;
+            border-radius: 60px;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            text-decoration: none;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 12px #0ff;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .header-right .next-btn:hover {
+            background: #0ff;
+            color: #010314;
+            border-color: #fff;
+            box-shadow: 0 0 30px #0ff, 0 0 50px #a2f;
+            transform: scale(1.03);
+        }
+
+        /* ===== HERO SECTION ===== */
+        .hero-section {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: auto;
+            text-align: center;
+            margin: 2rem 0 4rem;
+        }
+
+        .hero-content {
+            background: rgba(10, 20, 40, 0.5);
+            backdrop-filter: blur(12px);
+            border: 1px solid #0ff;
+            border-radius: 120px 30px 120px 30px;
+            padding: 3rem 6rem;
+            box-shadow: 0 0 70px #0ff5, inset 0 0 30px #1f3b5c;
+            animation: borderPulse 5s infinite alternate;
+        }
+
+        @keyframes borderPulse {
+            0% { border-color: #0ff; box-shadow: 0 0 50px #0ff5; }
+            100% { border-color: #f0f; box-shadow: 0 0 90px #f0f7, 0 0 140px #2af; }
+        }
+
+        .welcome-text {
+            font-size: 5rem;
+            font-weight: 600;
+            background: linear-gradient(145deg, #fff, #b1f0ff, #c8aaff, #f0f);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            background-size: 300% 300%;
+            animation: waveGradient 8s infinite linear, glitchTitle 4s infinite;
+            letter-spacing: 8px;
+            text-shadow: 0 0 30px cyan, 0 0 60px magenta;
+            margin-bottom: 1rem;
+        }
+
+        @keyframes waveGradient {
+            0% { background-position: 0% 0%; }
+            50% { background-position: 100% 100%; }
+            100% { background-position: 0% 0%; }
+        }
+
+        @keyframes glitchTitle {
+            0% { transform: skew(0deg, 0deg); opacity: 1; text-shadow: 0 0 30px cyan, 0 0 60px magenta; }
+            2% { transform: skew(3deg, 1deg); opacity: 0.9; text-shadow: 6px 0 red, -6px 0 blue; }
+            4% { transform: skew(0deg, 0deg); opacity: 1; }
+            100% { transform: skew(0deg, 0deg); }
+        }
+
+        /* ===== ZONE DE BIENVENUE AVEC EMOJI ===== */
+        .welcome-message {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: rgba(0, 255, 255, 0.05);
+            border-radius: 60px;
+            border: 1px solid rgba(255, 0, 255, 0.3);
+            backdrop-filter: blur(8px);
+            animation: messageGlow 3s infinite alternate;
+        }
+
+        @keyframes messageGlow {
+            0% { box-shadow: 0 0 20px rgba(0, 255, 255, 0.3); }
+            100% { box-shadow: 0 0 50px rgba(255, 0, 255, 0.5); }
+        }
+
+        .welcome-emoji {
+            font-size: 3.5rem;
+            display: inline-block;
+            animation: emojiFloat 4s ease-in-out infinite;
+            filter: drop-shadow(0 0 15px cyan);
+            margin-bottom: 0.5rem;
+        }
+
+        @keyframes emojiFloat {
+            0% { transform: translateY(0px) rotate(0deg); }
+            25% { transform: translateY(-10px) rotate(5deg); }
+            50% { transform: translateY(0px) rotate(0deg); }
+            75% { transform: translateY(10px) rotate(-5deg); }
+            100% { transform: translateY(0px) rotate(0deg); }
+        }
+
+        .welcome-subtitle {
+            font-size: 2.2rem;
+            font-weight: 400;
+            background: linear-gradient(145deg, #fff, #aaffff, #ffaaff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin: 0.5rem 0 1rem;
+            letter-spacing: 3px;
+            animation: subtitlePulse 3s infinite alternate;
+        }
+
+        @keyframes subtitlePulse {
+            0% { text-shadow: 0 0 10px cyan; transform: scale(1); }
+            100% { text-shadow: 0 0 30px magenta, 0 0 50px cyan; transform: scale(1.02); }
+        }
+
+        .welcome-description {
+            font-size: 1.3rem;
+            color: #e0f0ff;
+            max-width: 700px;
+            margin: 1rem auto;
+            line-height: 1.7;
+            background: rgba(0, 20, 40, 0.4);
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            border-left: 4px solid #0ff;
+            border-right: 4px solid #f0f;
+            animation: descriptionFlow 6s infinite;
+        }
+
+        @keyframes descriptionFlow {
+            0% { border-left-color: #0ff; border-right-color: #f0f; box-shadow: 0 0 15px #0ff; }
+            50% { border-left-color: #f0f; border-right-color: #0ff; box-shadow: 0 0 15px #f0f; }
+            100% { border-left-color: #0ff; border-right-color: #f0f; box-shadow: 0 0 15px #0ff; }
+        }
+
+        /* ===== AVANT-PROPOS ===== */
+        .preface-section {
+            max-width: 1000px;
+            margin: 5rem auto 3rem;
+            padding: 0 2rem;
+        }
+
+        .preface-container {
+            background: rgba(12, 22, 42, 0.65);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(0, 255, 255, 0.4);
+            border-radius: 70px 20px 70px 20px;
+            padding: 3rem 3.5rem;
+            box-shadow: 0 30px 50px -20px #0ff7, inset 0 0 40px #0ff3;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .preface-container::after {
+            content: "";
+            position: absolute;
+            top: -2px; left: -2px; right: -2px; bottom: -2px;
+            border-radius: 72px 22px 72px 22px;
+            background: conic-gradient(from 90deg, transparent, #0ff, transparent, #f0f, transparent);
+            opacity: 0.2;
+            pointer-events: none;
+            animation: rotateConic 8s linear infinite;
+        }
+
+        @keyframes rotateConic {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .subtitle {
+            font-size: 2.8rem;
+            font-weight: 400;
+            font-family: 'Major Mono Display', monospace;
+            background: linear-gradient(135deg, #9cf, #6ff, #f9f);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 1.8rem;
+            letter-spacing: 6px;
+            animation: pulseRole 3s infinite alternate;
+            display: inline-block;
+            border-bottom: 2px dashed #3cf;
+            padding-bottom: 10px;
+        }
+
+        @keyframes pulseRole {
+            0% { text-shadow: 0 0 4px cyan; letter-spacing: 5px; }
+            100% { text-shadow: 0 0 20px magenta, 0 0 40px cyan; letter-spacing: 8px; }
+        }
+
+        .preface-text {
+            font-size: 1.5rem;
+            color: #cfebff;
+            line-height: 1.6;
+            background: rgba(0, 20, 40, 0.3);
+            padding: 1.8rem;
+            border-radius: 50px;
+            border: 1px solid #0ff5;
+            backdrop-filter: blur(6px);
+            animation: textBreath 5s infinite alternate;
+        }
+
+        @keyframes textBreath {
+            0% { box-shadow: 0 0 15px #0ff3, inset 0 0 10px #0ff2; }
+            100% { box-shadow: 0 0 50px #f0f5, inset 0 0 30px #ff05; }
+        }
+
+        /* ===== ANIMATION FINALE ===== */
+        .wish-animation {
+            text-align: center;
+            margin: 5rem auto 3rem;
+        }
+
+        .animated-wish {
+            font-size: 3.2rem;
+            font-weight: 300;
+            background: linear-gradient(145deg, #fff, #b0f0ff, #d0b0ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            padding: 0.8rem 3rem;
+            border: 2px solid #0ff;
+            border-radius: 120px;
+            box-shadow: 0 0 50px cyan, inset 0 0 30px #0ff;
+            animation: wishPulse 2.5s infinite alternate, borderFlow 5s infinite;
+            display: inline-block;
+            backdrop-filter: blur(8px);
+            background-color: rgba(0, 10, 20, 0.3);
+            letter-spacing: 3px;
+        }
+
+        @keyframes wishPulse {
+            0% { text-shadow: 0 0 10px cyan, 0 0 20px magenta; box-shadow: 0 0 40px cyan, inset 0 0 20px cyan; }
+            100% { text-shadow: 0 0 40px white, 0 0 70px violet; box-shadow: 0 0 90px #f0f, inset 0 0 50px #ff0; }
+        }
+
+        @keyframes borderFlow {
+            0% { border-color: #0ff; }
+            50% { border-color: #f0f; }
+            100% { border-color: #0ff; }
+        }
+
+        /* ===== FOOTER ===== */
+        footer {
+            text-align: center;
+            padding: 2rem 0 2.5rem;
+            font-size: 1rem;
+            color: #7ba9c9;
+            background: rgba(0, 5, 10, 0.7);
+            backdrop-filter: blur(6px);
+            border-top: 1px solid cyan;
+            margin-top: 3rem;
+            animation: footerHum 6s infinite;
+        }
+
+        @keyframes footerHum {
+            0% { border-top-color: cyan; text-shadow: 0 0 2px cyan; }
+            50% { border-top-color: magenta; text-shadow: 0 0 8px magenta; }
+            100% { border-top-color: cyan; text-shadow: 0 0 2px cyan; }
+        }
+
+        footer span {
+            color: #0ff;
+            font-weight: 700;
+            text-shadow: 0 0 10px cyan, 0 0 20px blue;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 800px) {
+            .main-header { 
+                flex-direction: column; 
+                gap: 1rem; 
+                padding: 1rem; 
+            }
+            .sidebar-left { 
+                flex-direction: column; 
+                text-align: center; 
+            }
+            .welcome-text { 
+                font-size: 3.5rem; 
+            }
+            .hero-content { 
+                padding: 2rem; 
+            }
+            .welcome-subtitle { 
+                font-size: 1.8rem; 
+            }
+            .welcome-description { 
+                font-size: 1.1rem; 
+            }
+            .subtitle {
+                font-size: 2.2rem;
+            }
+            .preface-text {
+                font-size: 1.2rem;
+            }
+            .animated-wish {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
 </head>
 <body>
 
-    <!-- En-tête : Sidebar gauche et Bouton droite -->
-   <header class="main-header">
-    <div class="sidebar-left">
-        <img src="EMIT.jfif" alt="Logo Université" class="univ-photo">
-        <h1 class="univ-name">EMIT Fianarantsoa</h1>
-    </div>
-    <div class="header-right">
-        <!-- Suppression du style direct pour utiliser la classe CSS -->
-        <a href="equipe.html" class="next-btn">Page Suivante ➔</a>
-    </div>
-</header>
+    <!-- En-tête -->
+    <header class="main-header">
+        <div class="sidebar-left">
+            <img src="EMIT.jfif" alt="Logo EMIT Fianarantsoa" class="univ-photo">
+            <h1 class="univ-name">EMIT Fianarantsoa</h1>
+        </div>
+        <div class="header-right">
+            <a href="equipe.html" class="next-btn">Page Suivante ➔</a>
+        </div>
+    </header>
 
-
-
-    <!-- Section Hero (Informatique) -->
+    <!-- Section Hero avec emoji et message de bienvenue -->
     <section class="hero-section">
         <div class="hero-content">
-            <h2 class="welcome-text">Bienvenue ! </h2>
+            <h2 class="welcome-text">Bienvenue 🚀</h2>
+            
+            <div class="welcome-message">
+                <div class="welcome-emoji">💻</div>
+                <h3 class="welcome-subtitle">Dans l'univers du numérique</h3>
+                <p class="welcome-description">
+                    Plongez au cœur de l'innovation où la technologie rencontre la créativité. 
+                    Découvrez nos projets, nos formations et l'excellence de notre département informatique.
+                </p>
+            </div>
         </div>
     </section>
 
@@ -34,7 +452,8 @@
         <div class="preface-container">
             <h3 class="subtitle">Avant-propos</h3>
             <p class="preface-text">
-              Etudiants passionnés par le Web, nous avons conçus cet interface moderne, accessible et fonctionnelle .
+                Découvrez l'innovation et l'excellence technologique au cœur de notre département informatique. 
+                Nous formons les leaders de demain à travers des projets concrets et une vision moderne du numérique.
             </p>
         </div>
     </section>
@@ -43,12 +462,18 @@
     <div class="wish-animation">
         <span class="animated-wish">✨ Bonne Visite ! ✨</span>
     </div>
-<!-- FOOTER -->
+
+    <!-- Footer -->
     <footer>
-        <p>© 2026 <span>MonÉquipe</span> — Fait avec ❤️ en HTML, CSS & JavaScript</p>
+        <p>© 2026 <span>Groupe-19</span> — Fait avec ❤️ en HTML, CSS & JavaScript</p>
     </footer>
+
+    <!-- Script pour forcer le rafraîchissement des animations (optionnel) -->
+    <script>
+        // Ce script aide parfois à résoudre les problèmes de cache navigateur
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Page chargée avec succès !');
+        });
+    </script>
 </body>
 </html>
-
-
-
